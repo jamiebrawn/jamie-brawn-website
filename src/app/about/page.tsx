@@ -1,8 +1,8 @@
-export default function ProjectsPage() {
+export default function AboutPage() {
   return (
     <div>
-      <h1>Projects</h1>
-      <p>This page will provide links to software projects.</p>
+      <h1>About</h1>
+      <p>This page will provide an introduction to me.</p>
     </div>
   );
 }

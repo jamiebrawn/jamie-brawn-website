@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
+import { headers } from "next/headers";
 import { Providers } from "./Providers";
+import Footer from "../components/Footer";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -12,10 +14,18 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const headersList = headers();
+  const theme = headersList.get("x-theme") || "system";
+
   return (
-    <html lang="en">
+    <html lang="en" className={theme}>
       <body>
-        <Providers>{children}</Providers>
+        <Providers>
+          <div className="layout">
+            <main>{children}</main>
+            <Footer />
+          </div>
+        </Providers>
       </body>
     </html>
   );
