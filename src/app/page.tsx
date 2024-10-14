@@ -1,7 +1,6 @@
 "use client";
 
 import { useTheme } from "../context/ThemeContext";
-import ThemeToggle from "../components/ThemeToggle";
 
 import Link from "next/link";
 
@@ -11,8 +10,6 @@ export default function Home() {
   return (
     <div>
       <h1>Welcome</h1>
-      <p>Current theme: {theme}</p>
-      <ThemeToggle />
       <p>Projects and skills.</p>
       <nav>
         <ul>

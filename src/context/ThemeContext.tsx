@@ -17,42 +17,33 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({
   const [theme, setTheme] = useState<Theme>("system");
 
   useEffect(() => {
-    const savedTheme = localStorage.getItem("theme") as Theme | null;
+    const savedTheme = document.cookie
+      .split("; ")
+      .find((row) => row.startsWith("theme="))
+      ?.split("=")[1] as Theme | undefined;
     if (savedTheme) {
       setTheme(savedTheme);
     }
   }, []);
 
+  const changeTheme = (newTheme: Theme) => {
+    setTheme(newTheme);
+    document.cookie = `theme=${newTheme}; max-age=${60 * 60 * 24 * 365}; path=/`; // 1 year expiry
+  };
+
   useEffect(() => {
-    const applyTheme = (theme: Theme) => {
-      const root = window.document.documentElement;
-      const isDark =
-        theme === "dark" ||
-        (theme === "system" &&
-          window.matchMedia("(prefers-color-scheme: dark)").matches);
+    const root = window.document.documentElement;
+    const isDark =
+      theme === "dark" ||
+      (theme === "system" &&
+        window.matchMedia("(prefers-color-scheme: dark)").matches);
 
-      root.classList.remove("light", "dark");
-      root.classList.add(isDark ? "dark" : "light");
-    };
-
-    applyTheme(theme);
-
-    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
-    const handleChange = () => {
-      if (theme === "system") {
-        applyTheme("system");
-      }
-    };
-
-    // Use addEventListener instead of addListener
-    mediaQuery.addEventListener("change", handleChange);
-
-    // Clean up function
-    return () => mediaQuery.removeEventListener("change", handleChange);
+    root.classList.remove("light", "dark");
+    root.classList.add(isDark ? "dark" : "light");
   }, [theme]);
 
   return (
-    <ThemeContext.Provider value={{ theme, setTheme }}>
+    <ThemeContext.Provider value={{ theme, setTheme: changeTheme }}>
       {children}
     </ThemeContext.Provider>
   );
